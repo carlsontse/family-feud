@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script>
+    Handlebars.registerHelper("moduloIf", function(index_count,mod,value,block) {
+      if(parseInt(index_count)%(mod)=== value){
+        return block.fn(this);}
+    });
+    </script>
+
+    <script id="round-template" type="text/x-handlebars-template">
+      {{#each this}}
+        <div id="round-board-{{@index}}" class="round-board row">
+            <h1 class="title col-md-12">
+              {{title}}
+            </h1>
+            {{#each items}}
+              {{#moduloIf @index 2 0}}
+                <div class="row">
+              {{/moduloIf}}
+              <div class="col-md-1">
+                  &nbsp;
+              </div>
+              <div class="item col-md-4" {{#if answer}}data-index="{{index}}"{{/if}}>
+                  {{#if answer}}
+                    {{index}}
+                  {{else}}
+                    &nbsp;
+                  {{/if}}
+              </div>
+              {{#if answer}}
+                <div class="item-answer item-answer-{{index}} col-md-4">
+                    {{answer}} {{score}}
+                </div>
+              {{/if}}
+              <div class="col-md-1">
+                  &nbsp;
+              </div>
+              {{#moduloIf @index 2 1}}
+                </div>
+              {{/moduloIf}}
+            {{/each}}
+            <div>
+              <button type="button" class="next-round">
+                Next
+              </button>
+            </div>
+        </div>
+      {{/each}}
+    </script>
+
+    <script>
+    var roundSource = $("#round-template").html();
+    var roundTemplate = Handlebars.compile(roundSource);
+    var roundNumber = 0;
+
+      $( document ).ready(function() {
+
+        $('#start-game').click(function(e) {
+          $(this).hide();
+          $('#round-board-0').show();
+        });
+
+        var mainGame = [
+            {
+                title: "Other than matches, name something poeple use to start a fire",
+                items: [
+                  {
+                    index: 1,
+                    answer: "Lighter",
+                    score: 43
+                  },
+                  {
+                    index: 5
+                  },
+                  {
+                    index: 2,
+                    answer: "Sticks",
+                    score: 5
+                  },
+                  {
+                    index: 6
+                  },
+                  {
+                    index: 3,
+                    answer: "Flint",
+                    score: 10
+                  },
+                  {
+                    index: 7
+                  },
+                  {
+                    index: 4,
+                    answer: "Fluid",
+                    score: 10
+                  },
+                  {
+                    index: 8
+                  }
+                ]
+            },
+            {
+                title: "Name a person from Genesis",
+                items: [
+                  {
+                    index: 1,
+                    answer: "Abraham",
+                    score: 43
+                  },
+                  {
+                    index: 5
+                  },
+                  {
+                    index: 2,
+                    answer: "Jacob",
+                    score: 5
+                  },
+                  {
+                    index: 6
+                  },
+                  {
+                    index: 3,
+                    answer: "Flint",
+                    score: 10
+                  },
+                  {
+                    index: 7
+                  },
+                  {
+                    index: 4,
+                    answer: "Fluid",
+                    score: 10
+                  },
+                  {
+                    index: 8
+                  }
+                ]
+            }
+        ];
+
+        $('#body').html(roundTemplate(mainGame));
+        $('.item').click(function(e) {
+            var index = $(this).data('index');
+
+            if (index) {
+              var itemAnswer = $(this).siblings('.item-answer-' + index);
+              itemAnswer.show();
+              $(this).hide();
+            }
+        });
+        $('.next-round').click(function(e) {
+            roundNumber++;
+            $('#round-board-' + (roundNumber)).show();
+            $('#round-board-' + (roundNumber-1)).hide();
+        });
+      });
+
+    </script>
+    <style>
+      .round-board {
+        background-color: blue;
+        color: yellow;
+        width: 100%;
+        text-align: center;
+        display: none;
+      }
+      .round-board div {
+        margin-top: 6px;
+        margin-bottom: 6px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+      .round-board .item {
+        background-color: yellow;
+        text-align: center;
+        color: blue;
+        font-size: 13px;
+      }
+      .round-board .item-answer {
+        display: none;
+        background-color: white;
+        color: blue;
+        font-size: 15px;
+      }
+      .round-board .next-round {
+        color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <button type="button" id="start-game">
+      Start Game
+    </button>
+    <div id="body">
+    </div>
+  </body>
+</html>
