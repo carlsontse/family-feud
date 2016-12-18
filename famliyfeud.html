@@ -9,11 +9,23 @@
       if(parseInt(index_count)%(mod)=== value){
         return block.fn(this);}
     });
+
+    Handlebars.registerHelper('times', function(n, block) {
+      var accum = '';
+      for(var i = 0; i < n; ++i)
+          accum += block.fn(i);
+      return accum;
+    });
+
     </script>
 
     <script id="round-template" type="text/x-handlebars-template">
+      <div id="round-board">
       {{#each this}}
         <div id="round-board-{{@index}}" class="round-board row">
+            <h1 class="title col-md-12">
+              ROUND {{index}}
+            </h1>
             <h1 class="title col-md-12">
               {{title}}
             </h1>
@@ -33,7 +45,12 @@
               </div>
               {{#if answer}}
                 <div class="item-answer item-answer-{{index}} col-md-4">
-                    {{answer}} {{score}}
+                    <span style="text-align: left; float: left; width: 80%; ">
+                      {{answer}}
+                    </span>
+                    <span style="text-align: center; float: right; width: 20%; background-color: black; color: white;">
+                      {{score}}
+                    </span>
                 </div>
               {{/if}}
               <div class="col-md-1">
@@ -50,51 +67,73 @@
             </div>
         </div>
       {{/each}}
+      <button type="button" class="error">
+        WRONG ANSWER, SUCKAH!
+      </button>
+    </div>
+    </script>
+    <script id="error-template" type="text/x-handlebars-template">
+      {{#times this}}
+        <div class="error-marker">
+          X
+        </div>
+      {{/times}}
     </script>
 
     <script>
     var roundSource = $("#round-template").html();
+    var errorSource = $('#error-template').html();
     var roundTemplate = Handlebars.compile(roundSource);
+    var errorTemplate = Handlebars.compile(errorSource);
     var roundNumber = 0;
+    var errorCounter = 0;
 
       $( document ).ready(function() {
 
         $('#start-game').click(function(e) {
           $(this).hide();
+          $('#round-board').show();
           $('#round-board-0').show();
         });
 
         var mainGame = [
             {
-                title: "Other than matches, name something poeple use to start a fire",
+                title: "Name a bad job for someone who's accident-prone",
+                index: 1,
                 items: [
                   {
                     index: 1,
-                    answer: "Lighter",
-                    score: 43
+                    answer: "DRIVER",
+                    score: 33
                   },
                   {
-                    index: 5
+                    index: 5,
+                    answer: "GLASS MAKER",
+                    score: 9
                   },
                   {
                     index: 2,
-                    answer: "Sticks",
-                    score: 5
+                    answer: "CONSTRUCTION",
+                    score: 20
                   },
                   {
-                    index: 6
+                    index: 6,
+                    answer: "WINDOW WASHER",
+                    score: 7
                   },
                   {
                     index: 3,
-                    answer: "Flint",
-                    score: 10
+                    answer: "POLICE OFFICER",
+                    score: 11
                   },
                   {
-                    index: 7
+                    index: 7,
+                    answer: "SURGEON",
+                    score: 6
                   },
                   {
                     index: 4,
-                    answer: "Fluid",
+                    answer: "FOOD SERVICE",
                     score: 10
                   },
                   {
@@ -103,42 +142,268 @@
                 ]
             },
             {
-                title: "Name a person from Genesis",
+                title: "Name a garment you'd probably find in the dressing room for a pro-wrestling event",
+                index: 2,
                 items: [
                   {
                     index: 1,
-                    answer: "Abraham",
-                    score: 43
+                    answer: "TIGHTS",
+                    score: 32
                   },
                   {
-                    index: 5
+                    index: 5,
+                    answer: "BELT",
+                    score: 8
                   },
                   {
                     index: 2,
-                    answer: "Jacob",
-                    score: 5
+                    answer: "SHORTS",
+                    score: 17
                   },
                   {
-                    index: 6
+                    index: 6,
+                    answer: "CAPE",
+                    score: 8
                   },
                   {
                     index: 3,
-                    answer: "Flint",
-                    score: 10
+                    answer: "MASK",
+                    score: 15
                   },
                   {
                     index: 7
                   },
                   {
                     index: 4,
-                    answer: "Fluid",
-                    score: 10
+                    answer: "ROBE",
+                    score: 9
                   },
                   {
                     index: 8
                   }
                 ]
-            }
+            },
+            {
+                title: "Name an article of clothing you can't wash in the washing machine",
+                index: 3,
+                items: [
+                  {
+                    index: 1,
+                    answer: "SHOES",
+                    score: 29
+                  },
+                  {
+                    index: 5,
+                    answer: "SWEATER",
+                    score: 9
+                  },
+                  {
+                    index: 2,
+                    answer: "BRA",
+                    score: 21
+                  },
+                  {
+                    index: 6,
+                    answer: "SUIT",
+                    score: 7
+                  },
+                  {
+                    index: 3,
+                    answer: "HAT",
+                    score: 16
+                  },
+                  {
+                    index: 7,
+                    answer: "GOWN",
+                    score: 3
+                  },
+                  {
+                    index: 4,
+                    answer: "COAT",
+                    score: 13
+                  },
+                  {
+                    index: 8
+                  }
+                ]
+            },
+            {
+                  title: "Name something that a man had better not take along on his honeymoon",
+                  index: 4,
+                  items: [
+                    {
+                      index: 1,
+                      answer: "ANOTHER WOMAN",
+                      score: 33
+                    },
+                    {
+                      index: 5,
+                      answer: "FRIENDS",
+                      score: 6
+                    },
+                    {
+                      index: 2,
+                      answer: "CELLPHONE",
+                      score: 17
+                    },
+                    {
+                      index: 6,
+                      answer: "GOLF CLUBS",
+                      score: 5
+                    },
+                    {
+                      index: 3,
+                      answer: "HIS PARENTS",
+                      score: 14
+                    },
+                    {
+                      index: 7,
+                      answer: "HIS PET",
+                      score: 4
+                    },
+                    {
+                      index: 4,
+                      answer: "WORK/LAPTOP",
+                      score: 12
+                    },
+                    {
+                      index: 8
+                    }
+                  ]
+              },
+              {
+                    title: "Name something people like to do when listenining to music",
+                    index: 5,
+                    items: [
+                      {
+                        index: 1,
+                        answer: "CLEAN",
+                        score: 21
+                      },
+                      {
+                        index: 5,
+                        answer: "EAT",
+                        score: 10
+                      },
+                      {
+                        index: 2,
+                        answer: "EXERCISE",
+                        score: 18
+                      },
+                      {
+                        index: 6,
+                        answer: "DANCE",
+                        score: 8
+                      },
+                      {
+                        index: 3,
+                        answer: "STUDY",
+                        score: 18
+                      },
+                      {
+                        index: 7,
+                        answer: "DRIVE",
+                        score: 8
+                      },
+                      {
+                        index: 4,
+                        answer: "GARDEN",
+                        score: 12
+                      },
+                      {
+                        index: 8
+                      }
+                    ]
+                },
+                {
+                      title: "Name an excuse someone might give to get ahead of you in the checkout line",
+                      index: 6,
+                      items: [
+                        {
+                          index: 1,
+                          answer: "IN A HURRY",
+                          score: 42
+                        },
+                        {
+                          index: 5,
+                          answer: "FEW ITEMS",
+                          score: 7
+                        },
+                        {
+                          index: 2,
+                          answer: "NOT FEELING WELL",
+                          score: 15
+                        },
+                        {
+                          index: 6,
+                          answer: "KIDS WITH THEM",
+                          score: 6
+                        },
+                        {
+                          index: 3,
+                          answer: "LATE FOR WORK/APPT.",
+                          score: 11
+                        },
+                        {
+                          index: 7,
+                          answer: "NEED TO USE BATHROOM",
+                          score: 5
+                        },
+                        {
+                          index: 4,
+                          answer: "EMERGENCY",
+                          score: 10
+                        },
+                        {
+                          index: 8
+                        }
+                      ]
+                  }
+                  ,
+                  {
+                        title: "Name a food that doesn't need to be refrigerated",
+                        index: 7,
+                        items: [
+                          {
+                            index: 1,
+                            answer: "BREAD",
+                            score: 35
+                          },
+                          {
+                            index: 5,
+                            answer: "POTATOES",
+                            score: 8
+                          },
+                          {
+                            index: 2,
+                            answer: "BANANAS",
+                            score: 16
+                          },
+                          {
+                            index: 6,
+                            answer: "CEREAL",
+                            score: 6
+                          },
+                          {
+                            index: 3,
+                            answer: "COOKIES",
+                            score: 13
+                          },
+                          {
+                            index: 7,
+                            answer: "CANNED GOODS",
+                            score: 6
+                          },
+                          {
+                            index: 4,
+                            answer: "CHIPS",
+                            score: 10
+                          },
+                          {
+                            index: 8
+                          }
+                        ]
+                    }
         ];
 
         $('#body').html(roundTemplate(mainGame));
@@ -155,14 +420,33 @@
             roundNumber++;
             $('#round-board-' + (roundNumber)).show();
             $('#round-board-' + (roundNumber-1)).hide();
+            errorCounter = 0;
+        });
+
+        $('.error').click(function(e) {
+          errorCounter++;
+          $('#error').html(errorTemplate(errorCounter));
+          if (errorCounter === 3) {
+            errorCounter = 0;
+          }
+          $('#body').css('opacity', '0.5');
+          $('#error').show();
+        });
+
+        $('#error').click(function(e) {
+            $(this).hide();
+            $('#body').css('opacity', '1');
         });
       });
 
     </script>
     <style>
+      #round-board {
+        display: none;
+      }
       .round-board {
-        background-color: blue;
-        color: yellow;
+        background-color: #485BD5;
+        color: white;
         width: 100%;
         text-align: center;
         display: none;
@@ -177,16 +461,35 @@
         background-color: yellow;
         text-align: center;
         color: blue;
-        font-size: 13px;
+        font-size: 26px;
+        border: 3px solid black;
       }
       .round-board .item-answer {
         display: none;
         background-color: white;
-        color: blue;
-        font-size: 15px;
+        color: black;
+        font-size: 26px;
+        border: 3px solid black;
       }
       .round-board .next-round {
         color: black;
+      }
+      .error-marker {
+        color: red;
+        font-size: 300px;
+        padding-left: 12px;
+        padding-right: 12px;
+        display: inline-block;
+      }
+      #error {
+        z-index: 99999;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 500px;
+        display: none;
+        text-align: center;
+        width: 100%;
       }
     </style>
   </head>
@@ -196,6 +499,8 @@
       Start Game
     </button>
     <div id="body">
+    </div>
+    <div id="error">
     </div>
   </body>
 </html>
